@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rede Mãos Dadas | Solidariedade Segura</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --amarelo: #FFD700;
+            --amarelo-claro: #FFF9E3;
+            --laranja: #F39C12;
+            --quente: #E67E22;
+            --branco: #FFFFFF;
+            --texto: #333333;
+            --seguranca: #d9534f;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background-color: var(--amarelo-claro); color: var(--texto); overflow-x: hidden; }
+
+        /* --- LOGO --- */
+        .logo-container {
+            text-align: center;
+            padding: 20px 0;
+            background: white;
+        }
+        .logo-site {
+            max-width: 180px; /* Ajuste o tamanho da sua logo aqui */
+            height: auto;
+        }
+
+        /* --- SPLASH SCREEN --- */
+        #splash {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--amarelo);
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 20px;
+        }
+        #typewriter { font-size: 1.8rem; font-weight: 700; color: #444; min-height: 4em; margin-bottom: 30px; }
+        .splash-images { display: flex; gap: 15px; opacity: 0; transition: 1s; }
+        .splash-images img { width: 90px; height: 90px; border-radius: 50%; object-fit: cover; border: 4px solid white; opacity: 0; }
+        .img-reveal { animation: revealImg 0.5s forwards; }
+        @keyframes revealImg { to { opacity: 1; transform: scale(1.1); } }
+
+        /* --- SITE PRINCIPAL --- */
+        #main-content { display: none; padding-bottom: 100px; }
+        .slider { width: 100%; height: 250px; overflow: hidden; position: relative; }
+        .slides { display: flex; width: 400%; height: 100%; transition: 0.8s ease-in-out; }
+        .slides img { width: 100%; height: 100%; object-fit: cover; }
+
+        .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+
+        /* Alerta de Segurança */
+        .aviso-seguranca {
+            background: #fff;
+            border: 2px solid var(--seguranca);
+            padding: 15px;
+            border-radius: 15px;
+            margin-top: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+        .aviso-seguranca span { font-size: 1.5rem; }
+        .aviso-seguranca p { font-size: 0.9rem; font-weight: 600; color: var(--seguranca); line-height: 1.3; }
+
+        /* Botão Pedir Ajuda */
+        .btn-abrir-form {
+            background: var(--quente);
+            color: white;
+            width: 100%;
+            padding: 20px;
+            border-radius: 15px;
+            font-size: 1.4rem;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+            margin: 20px 0;
+            box-shadow: 0 5px 15px rgba(230, 126, 34, 0.3);
+        }
+
+        #form-ajuda {
+            display: none;
+            background: white;
+            padding: 25px;
+            border-radius: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            animation: slideDown 0.4s ease-out;
+        }
+        @keyframes slideDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+
+        input, textarea { width: 100%; padding: 15px; margin-bottom: 10px; border: 2px solid #eee; border-radius: 10px; font-size: 1rem; }
+        
+        .card { background: white; padding: 20px; border-radius: 20px; margin-bottom: 20px; border-left: 8px solid var(--amarelo); box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+        .btn-whatsapp { display: block; background: #25D366; color: white; text-decoration: none; padding: 12px; border-radius: 50px; font-weight: bold; text-align: center; margin-top: 10px; }
+
+        /* Vídeos */
+        .video-ad-box {
+            background: #000;
+            border-radius: 20px;
+            margin: 30px 0;
+            overflow: hidden;
+            aspect-ratio: 9/16;
+            max-height: 450px;
+            width: 100%;
+        }
+        .video-ad-box video { width: 100%; height: 100%; object-fit: cover; }
+
+        /* BOT DE CONVERSA */
+       #chat-wrapper { 
+    position: fixed; 
+    bottom: 100px; /* sobe o bot para não cobrir o footer */
+    right: 20px; 
+    z-index: 1000; 
+    display: flex; 
+    flex-direction: column; 
+    align-items: flex-end; 
+}
+        #chat-bot { width: 320px; height: 450px; background: white; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); display: none; flex-direction: column; overflow: hidden; margin-bottom: 10px; border: 1px solid #ddd; }
+        .chat-header { background: var(--quente); color: white; padding: 15px; font-weight: bold; display: flex; justify-content: space-between; }
+        #chat-messages { flex: 1; overflow-y: auto; padding: 15px; font-size: 0.9rem; }
+        .msg { padding: 8px 12px; border-radius: 10px; margin-bottom: 12px; max-width: 85%; line-height: 1.4; }
+        .msg-bot { background: #eee; align-self: flex-start; }
+        .msg-user { background: var(--amarelo); align-self: flex-end; margin-left: auto; }
+        .chat-input { display: flex; border-top: 1px solid #eee; padding: 5px; }
+        .chat-input input { border: none; padding: 10px; flex: 1; margin: 0; }
+        #btn-open-chat { background: var(--quente); color: white; border: none; padding: 12px 20px; border-radius: 50px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+        .logo-splash {
+    width: 70%;
+    max-width: 320px;
+    margin-bottom: 25px;
+}
+.dev-footer {
+    background: #fff;
+    border-top: 3px solid var(--amarelo);
+    text-align: center;
+    padding: 15px;
+    font-size: 0.9rem;
+    color: #555;
+    margin-top: 40px;
+}
+
+.dev-footer a {
+    color: var(--quente);
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.dev-footer a:hover {
+    text-decoration: underline;
+}
+#btn-acessar {
+    margin-top: 25px;
+    padding: 15px 40px;
+    background: var(--quente);
+    color: white;
+    border: none;
+    border-radius: 40px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.08); }
+    100% { transform: scale(1); }
+}
+    </style>
+</head>
+<body>
+
+    <div id="splash">
+    <!-- LOGO NO TOPO DA ENTRADA -->
+    <img src="logobanner.png" 
+     alt="Logo Rede Mãos Dadas"
+     class="logo-splash">
+
+    <div id="typewriter"></div>
+
+    <div class="splash-images" id="splashImages">
+        <img src="https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=200" id="sImg1">
+        <img src="https://images.unsplash.com/photo-1593113598332-cd288d649433?w=200" id="sImg2">
+        <img src="https://images.unsplash.com/photo-1532629345422-7515f3d16bb6?w=200" id="sImg3">
+    </div>
+    <button id="btn-acessar" onclick="entrarAgora()">Acessar ➜</button>
+</div>
+     
+<div id="main-content" style="display:none;">
+    <header style="width: 100%; background: white; text-align: center; border-bottom: 5px solid var(--amarelo);">
+    <img src="logobanner.png" alt="Banner Rede Mãos Dadas" style="width: 100%; max-width: 1200px; height: auto; display: block; margin: 0 auto;">
+</header>
+
+        <div class="slider">
+            <div class="slides" id="slides">
+               <img src="https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=800">
+<img src="https://images.unsplash.com/photo-1593113598332-cd288d649433?w=800">
+<img src="https://images.unsplash.com/photo-1532629345422-7515f3d16bb6?w=800">
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="aviso-seguranca">
+                <span>🛡️</span>
+                <p>ATENÇÃO: Esta plataforma é 100% gratuita e sem fins financeiros. Não solicitamos senhas, dados bancários ou documentos pessoais.</p>
+            </div>
+
+            <button class="btn-abrir-form" onclick="toggleForm()">Pedir Ajuda Agora ✋</button>
+
+            <div id="form-ajuda">
+                <h2 style="margin-bottom:15px">Descreva sua necessidade</h2>
+                <input type="text" id="nome" placeholder="Seu Nome">
+                <input type="tel" id="whatsapp" placeholder="WhatsApp com DDD">
+                <input type="text" id="cidade" placeholder="Cidade">
+                <textarea id="dificuldade" rows="3" placeholder="Como podemos te ajudar?"></textarea>
+                <button class="btn-enviar" style="width:100%; padding:15px; background:var(--laranja); border:none; color:white; font-weight:bold; border-radius:10px;" id="btnEnviar">Cadastra Ajuda</button>
+            </div>
+
+            <h2 style="margin: 20px 0;">Pedidos Recentes</h2>
+            <div id="lista-pedidos-container"></div>
+        </div>
+    </div>
+
+    <div id="chat-wrapper">
+        <div id="chat-bot">
+            <div class="chat-header">
+                <span>Bot Solidário 🤖</span>
+                <span style="cursor:pointer" onclick="toggleChat()">Fechar ✖</span>
+            </div>
+            <div id="chat-messages">
+                <div class="msg msg-bot">Olá! Sou o Assistente. Como posso ajudar?</div>
+            </div>
+            <div class="chat-input">
+                <input type="text" id="userInput" placeholder="Ex: É gratuito?">
+                <button onclick="sendBotMsg()" style="background:var(--amarelo); border:none; padding:10px; border-radius:5px;">></button>
+            </div>
+        </div>
+        <button id="btn-open-chat" onclick="toggleChat()">Dúvidas? 🤖</button>
+    </div>
+<footer class="dev-footer">
+    <p>Criado por <strong>um jovem de 19 anos que acredita que pequenas atitudes podem mudar vidas</strong></p>
+    <p>📱 WhatsApp: <a href="https://wa.me/5588988916133" target="_blank">Clique para falar comigo</a></p>
+</footer>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
+        import { getFirestore, collection, addDoc, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+
+        // CONFIGURAÇÕES FIREBASE
+       const firebaseConfig = {
+  apiKey: "AIzaSyC9htmdAVh71PEOPXusuDDubU_HSPShggc",
+  authDomain: "rede-maos-dadas.firebaseapp.com",
+  projectId: "rede-maos-dadas",
+  storageBucket: "rede-maos-dadas.firebasestorage.app",
+  messagingSenderId: "227518912048",
+  appId: "1:227518912048:web:ac07acadb3a5fb3c53fff5"
+};
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // --- SPLASH ---
+        const textContent = "Em um mundo onde muitos sofrem em silêncio, a solidariedade nasce como esperança.";
+        let charIndex = 0;
+        function typeWriter() {
+            if(charIndex < textContent.length) {
+                document.getElementById("typewriter").innerHTML += textContent.charAt(charIndex);
+                charIndex++; setTimeout(typeWriter, 40);
+            } else {
+                document.getElementById("splashImages").style.opacity = 1;
+                setTimeout(()=> document.getElementById("sImg1").classList.add('img-reveal'), 100);
+                setTimeout(()=> document.getElementById("sImg2").classList.add('img-reveal'), 300);
+                setTimeout(()=> document.getElementById("sImg3").classList.add('img-reveal'), 500);
+                setTimeout(()=> {
+                    document.getElementById("splash").style.display = "none";
+                    document.getElementById("main-content").style.display = "block";
+                }, 3500);
+            }
+        }
+        window.onload = typeWriter;
+
+        window.toggleForm = () => {
+            const f = document.getElementById("form-ajuda");
+            f.style.display = (f.style.display === "block") ? "none" : "block";
+        };
+        window.toggleChat = () => {
+            const c = document.getElementById("chat-bot");
+            c.style.display = (c.style.display === "flex") ? "none" : "flex";
+        };
+
+        // SALVAR FIREBASE
+        document.getElementById("btnEnviar").onclick = async () => {
+            const n = document.getElementById("nome").value;
+            const w = document.getElementById("whatsapp").value.replace(/\D/g,'');
+            const c = document.getElementById("cidade").value;
+            const d = document.getElementById("dificuldade").value;
+            if(n && w && c && d) {
+                await addDoc(collection(db, "pedidos"), { n, w, c, d, t: new Date() });
+                alert("Pedido publicado!");
+                toggleForm();
+                document.querySelectorAll("input, textarea").forEach(el => el.value = "");
+            }
+        };
+
+        // LISTAR FIREBASE
+        onSnapshot(query(collection(db, "pedidos"), orderBy("t", "desc")), (snap) => {
+            const container = document.getElementById("lista-pedidos-container");
+            container.innerHTML = "";
+            let count = 0;
+            snap.forEach(doc => {
+                const data = doc.data();
+                container.innerHTML += `
+                    <div class="card">
+                        <small>📍 ${data.c}</small>
+                        <h3 style="margin:5px 0">${data.n}</h3>
+                        <p>${data.d}</p>
+                        <a href="https://wa.me/55${data.w}" target="_blank" class="btn-whatsapp">Ajudar pelo WhatsApp</a>
+                        <small style="display:block; text-align:center; margin-top:10px; color:#777">"Entre em contato pelo WhatsApp para ajudar esta pessoa."</small>
+                    </div>`;
+                count++;
+                if(count % 2 === 0) {
+                    container.innerHTML += `<div class="video-ad-box"><video autoplay muted loop playsinline><source src="SEU_VIDEO.mp4" type="video/mp4"></video></div>`;
+                }
+            });
+        });
+window.entrarAgora = () => {
+    document.getElementById("splash").style.display = "none";
+    document.getElementById("main-content").style.display = "block";
+};
+        // --- BOT SUPER INTELIGENTE (RESPONDE A TUDO) ---
+        window.sendBotMsg = () => {
+            const input = document.getElementById("userInput");
+            const val = input.value.toLowerCase().trim();
+            if(!val) return;
+            addMsg(input.value, 'user');
+            input.value = "";
+            
+            let r = "Desculpe, não entendi. Tente perguntar sobre: segurança, como ajudar, se é grátis ou como pedir ajuda.";
+
+            // Grupos de Respostas (Regex para pegar centenas de variações)
+            if (/(seguro|confia|golpe|perig|medo|real|verdade|mentira|fraude)/.test(val)) {
+                r = "Sim! Somos uma rede de ajuda mútua. Nunca forneça senhas ou dados bancários a ninguém. A ajuda é direta via WhatsApp.";
+            }
+            else if (/(pagar|cust|val|dinheir|gratis|taxa|cobrar|financeiro|vender)/.test(val)) {
+                r = "Este site é 100% gratuito. Não cobramos taxas e não temos fins lucrativos. A solidariedade aqui não tem preço.";
+            }
+            else if (/(ajudar|doar|contribuir|voluntario|colaborar|apoiar|fazer)/.test(val)) {
+                r = "Para ajudar, escolha um pedido na lista abaixo e clique no botão verde. Você falará direto com a pessoa no WhatsApp.";
+            }
+            else if (/(pedir|cadast|publicar|postar|fome|precisando|colocar|faco|necessidade)/.test(val)) {
+                r = "Clique no botão 'Pedir Ajuda Agora' no topo do site e preencha o formulário com seus dados de contato.";
+            }
+            else if (/(cpf|rg|document|enderec|foto|privacidade|dados|pessoais)/.test(val)) {
+                r = "Nós NÃO pedimos CPF, RG ou fotos de documentos. Apenas seu nome, cidade e WhatsApp para que possam te encontrar.";
+            }
+            else if (/(oi|ola|bom dia|boa tarde|boa noite|salve|opa|hey)/.test(val)) {
+                r = "Olá! É um prazer ter você aqui. Como posso te orientar hoje? Você quer ajudar ou precisa de ajuda?";
+            }
+            else if (/(fome|comida|alimento|roupa|agasalho|remedio|saude|doente)/.test(val)) {
+                r = "Sentimos muito. Registre seu pedido detalhando o que precisa (alimentos, remédios ou roupas) e aguarde o contato de um doador.";
+            }
+            else if (/(obrigado|valeu|grato|gratidao|amem|legal|top|entendi)/.test(val)) {
+                r = "Por nada! Ficamos felizes em ajudar. Se tiver mais dúvidas, é só perguntar. Juntos somos mais fortes! 💛";
+            }
+            else if (/(tchau|bye|ate logo|fui)/.test(val)) {
+                r = "Até logo! Que Deus te abençoe e boa sorte na sua jornada. 💛";
+            }
+
+            setTimeout(() => addMsg(r, 'bot'), 600);
+        };
+
+        function addMsg(t, type) {
+            const m = document.createElement("div");
+            m.className = `msg msg-${type}`;
+            m.innerText = t;
+            document.getElementById("chat-messages").appendChild(m);
+            document.getElementById("chat-messages").scrollTop = 9999;
+        }
+    </script>
+</body>
+</html>
